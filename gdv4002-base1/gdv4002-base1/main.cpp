@@ -1,17 +1,25 @@
 #include "Engine.h"
-
+#include "keys.h"
+#include <bitset>
 
 	
 
 // Function prototypes
 float enemyPhase[3] = { 0.0f, 0.0f, 0.0f };
-float enemyPhaseVelocity[3] = { glm::radians(90.0f),glm::radians(90.0f), glm::radians(90.0f) };
+float enemyPhaseVelocity[3] = { glm::radians(80.0f),glm::radians(90.0f), glm::radians(100.0f) };
+static float playerspeed = 1.0f;
 
 void myUpdate(GLFWwindow* window, double tDelta) 
 {
 	float player1RotationSpeed = glm::radians(90.0f);
 	GameObject2D* player1 = getObject("player1");
 	player1->orientation += player1RotationSpeed * tDelta;
+	
+	
+	GameObject2D* player1 = getObject("player1");
+	if (keys.test(key::W) == true) {
+		player1->position.y += playerSpeed * (float)tDelta;
+	}
 
 	GameObjectCollection enemies = getObjectCollection("enemy");
 	//enemies.objectArray[0]->position.y = sinf(enemyPhase[0]); 
@@ -25,10 +33,47 @@ void myUpdate(GLFWwindow* window, double tDelta)
 
 		enemyPhase[i] += enemyPhaseVelocity[i] * tDelta;
 	}
+	
+	
+	
+
 }
 
+void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
+	//check if the key was just pressed
+	if (action == GLFW_PRESS) {
+		//now check which key was pressed...
+		switch (key)
+		{
+		case GLFW_KEY_ESCAPE:
+			//if escape is pressed tell GLFW we want to close the window (and quit)
 
+			glfwSetWindowShouldClose(window, true);
+			break;
+
+		case GLFW_KEY_W:
+			printf("w pressed\n");
+			keys[key::W] = true;
+			break;
+		}
+	}
+	//if not pressed, check the key has just been released
+	else if (action == GLFW_RELEASE) {
+		
+
+		//handle key release events
+		switch (key)
+		{
+		case GLFW_KEY_W:
+			printf("w released\n"); 
+			keys[key::W] = false;
+			break;
+		}
+	}
+}
+
+std::bitset<5> keys{ 0x0 };
 
 int main(void) {
 
@@ -79,6 +124,7 @@ int main(void) {
 	
 
 	setUpdateFunction(myUpdate);
+	setKeyboardHandler(myKeyboardHandler);
 	// Enter main loop - this handles update and render calls
 	engineMainLoop();
 
