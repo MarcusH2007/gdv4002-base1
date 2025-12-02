@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "keys.h"
+#include "Keys.h"
 #include <bitset>
 
 	
@@ -7,18 +7,36 @@
 // Function prototypes
 float enemyPhase[3] = { 0.0f, 0.0f, 0.0f };
 float enemyPhaseVelocity[3] = { glm::radians(80.0f),glm::radians(90.0f), glm::radians(100.0f) };
-static float playerspeed = 1.0f;
+static float playerSpeed = 1.0f;
+static float playerSpeedReverse = -1.0f;
+
+bool wPressed;
+bool aPressed;
+bool sPressed;
+bool dPressed;
 
 void myUpdate(GLFWwindow* window, double tDelta) 
 {
 	float player1RotationSpeed = glm::radians(90.0f);
+	float player1RotationSpeedReverse = glm::radians(-90.0f);
 	GameObject2D* player1 = getObject("player1");
-	player1->orientation += player1RotationSpeed * tDelta;
+    //player1->orientation += player1RotationSpeed * tDelta;
 	
-	
-	GameObject2D* player1 = getObject("player1");
-	if (keys.test(key::W) == true) {
+	if (wPressed == true) {
 		player1->position.y += playerSpeed * (float)tDelta;
+	}
+
+	if (aPressed == true) {
+		player1->orientation += player1RotationSpeed * tDelta;
+		
+	}
+
+	if (sPressed == true) {
+		player1->position.y += playerSpeedReverse * (float)tDelta;
+	}
+
+	if (dPressed == true) {
+		player1->orientation += player1RotationSpeedReverse * tDelta;
 	}
 
 	GameObjectCollection enemies = getObjectCollection("enemy");
@@ -54,7 +72,22 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 
 		case GLFW_KEY_W:
 			printf("w pressed\n");
-			keys[key::W] = true;
+			wPressed = true;
+			break;
+
+		case GLFW_KEY_A:
+			printf("a pressed\n");
+			aPressed = true;
+			break;
+
+		case GLFW_KEY_S:
+			printf("s pressed\n");
+			sPressed = true;
+			break;
+
+		case GLFW_KEY_D:
+			printf("d pressed\n");
+			dPressed = true;
 			break;
 		}
 	}
@@ -67,8 +100,24 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 		{
 		case GLFW_KEY_W:
 			printf("w released\n"); 
-			keys[key::W] = false;
+			wPressed = false;
 			break;
+
+		case GLFW_KEY_A:
+			printf("a released\n");
+			aPressed = false;
+			break;
+
+		case GLFW_KEY_S:
+			printf("s released\n");
+			sPressed = false;
+			break;
+
+		case GLFW_KEY_D:
+			printf("d released\n");
+			dPressed = false;
+			break;
+
 		}
 	}
 }
