@@ -1,61 +1,29 @@
 #include "Engine.h"
 #include "Keys.h"
 #include <bitset>
+#include "Player.h"
 
 	
 
 // Function prototypes
-float enemyPhase[3] = { 0.0f, 0.0f, 0.0f };
-float enemyPhaseVelocity[3] = { glm::radians(80.0f),glm::radians(90.0f), glm::radians(100.0f) };
-static float playerSpeed = 1.0f;
-static float playerSpeedReverse = -1.0f;
 
 bool wPressed;
 bool aPressed;
 bool sPressed;
 bool dPressed;
 
-void myUpdate(GLFWwindow* window, double tDelta) 
-{
-	float player1RotationSpeed = glm::radians(90.0f);
-	float player1RotationSpeedReverse = glm::radians(-90.0f);
-	GameObject2D* player1 = getObject("player1");
-    //player1->orientation += player1RotationSpeed * tDelta;
+ 
+
 	
-	if (wPressed == true) {
-		player1->position.y += playerSpeed * (float)tDelta;
-	}
-
-	if (aPressed == true) {
-		player1->orientation += player1RotationSpeed * tDelta;
-		
-	}
-
-	if (sPressed == true) {
-		player1->position.y += playerSpeedReverse * (float)tDelta;
-	}
-
-	if (dPressed == true) {
-		player1->orientation += player1RotationSpeedReverse * tDelta;
-	}
-
-	GameObjectCollection enemies = getObjectCollection("enemy");
-	//enemies.objectArray[0]->position.y = sinf(enemyPhase[0]); 
-	//assume phase stored in radians so no conversion is needed
-	//enemyPhase[0] += enemyPhaseVelocity[0] * tDelta;
-
-	for (int i = 0; i < enemies.objectCount; i++) {
-
-		enemies.objectArray[i]->position.y = sinf(enemyPhase[i]);
-		//assume phase is stored in radians so no conversion needed
-
-		enemyPhase[i] += enemyPhaseVelocity[i] * tDelta;
-	}
+    
+	
+	
+	
 	
 	
 	
 
-}
+
 
 void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
@@ -139,40 +107,20 @@ int main(void) {
 	//
 	// Setup game scene objects here
 	//
-	//addObject("player",glm::vec2(1.0f,1.0f),45.0f * 3.14/180.0f);
-	addObject("player1",glm::vec2(1.0f,1.0f),glm::radians(45.0f),glm::vec2(0.5f,0.5f), "Resources\\Textures\\freddy fazbeaer.png");
-	//addObject("player2", glm::vec2(1.0f, 1.0f), glm::radians(45.0f), glm::vec2(1.0f, 0.5f));
-	addObject("enemy", glm::vec2(0.0f, 0.0f), glm::radians(45.0f), glm::vec2(0.75f, 0.75f), "Resources\\Textures\\ghost.png");
-	addObject("enemy", glm::vec2(1.0f, 0.0f), glm::radians(45.0f), glm::vec2(0.75f, 0.75f), "Resources\\Textures\\ghost.png");
-	addObject("enemy", glm::vec2(2.0f, 0.0f), glm::radians(45.0f), glm::vec2(0.75f, 0.75f), "Resources\\Textures\\ghost.png");
 
-	
-	//GameObject2D* player2Object = getObject("player2");
-	//if (player2Object != nullptr) {
+	GLuint playerTexture =loadTexture("Resources\\Textures\\player1_ship.png");
 
-		// player2 here
-		//player2Object->position = glm::vec2(-1.5f, 1.0f);
-		//player2Object->orientation = glm::radians(45.0f);
-		//player2Object->textureID = loadTexture("Resources\\Textures\\danny.png");
+	Player* mainPlayer =new Player(glm::vec2(-1.5f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), playerTexture, 1.0f);
+
+	addObject("player", mainPlayer);
+
 		
-	//}
-
-	GameObject2D* player1Object = getObject("player1");
-	if (player1Object != nullptr) {
-
-		//update player1 here
-		player1Object->position = glm::vec2(-1.0f, 1.0f);
-		player1Object->orientation = glm::radians(-30.0f);
-		player1Object->textureID = loadTexture("Resources\\Textures\\freddy fazbeaer.png");
-		
-	}
+}
 	
-	listGameObjectKeys();
-
-	listObjectCounts();
+	
 	
 
-	setUpdateFunction(myUpdate);
+	
 	setKeyboardHandler(myKeyboardHandler);
 	// Enter main loop - this handles update and render calls
 	engineMainLoop();
