@@ -2,6 +2,7 @@
 #include "Keys.h"
 #include <bitset>
 #include "Player.h"
+#include "Enemy.h"
 
 	
 
@@ -13,9 +14,10 @@ bool sPressed;
 bool dPressed;
 
  
-
+std::bitset<5> keys;
 	
-    
+Player* mainPlayer;
+
 	
 	
 	
@@ -41,21 +43,28 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 		case GLFW_KEY_W:
 			printf("w pressed\n");
 			wPressed = true;
+			keys[0] = 1;
 			break;
 
 		case GLFW_KEY_A:
 			printf("a pressed\n");
 			aPressed = true;
+
+			keys[1] = 1;
 			break;
 
 		case GLFW_KEY_S:
 			printf("s pressed\n");
 			sPressed = true;
+
+			keys[3] = 1;
 			break;
 
 		case GLFW_KEY_D:
 			printf("d pressed\n");
 			dPressed = true;
+
+			keys[4] = 1;
 			break;
 		}
 	}
@@ -69,28 +78,38 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 		case GLFW_KEY_W:
 			printf("w released\n"); 
 			wPressed = false;
+
+			keys[0] = 0;
 			break;
 
 		case GLFW_KEY_A:
 			printf("a released\n");
 			aPressed = false;
+
+			keys[1] = 0;
 			break;
 
 		case GLFW_KEY_S:
 			printf("s released\n");
 			sPressed = false;
+
+			keys[3] = 0;
 			break;
 
 		case GLFW_KEY_D:
 			printf("d released\n");
 			dPressed = false;
+
+			keys[4] = 0;
 			break;
 
 		}
 	}
+
+	mainPlayer->updateKeys(keys);
 }
 
-std::bitset<5> keys{ 0x0 };
+
 
 int main(void) {
 
@@ -110,17 +129,10 @@ int main(void) {
 
 	GLuint playerTexture =loadTexture("Resources\\Textures\\player1_ship.png");
 
-	Player* mainPlayer =new Player(glm::vec2(-1.5f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), playerTexture, 1.0f);
+	mainPlayer =new Player(glm::vec2(-1.5f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), playerTexture, 1.0f);
 
 	addObject("player", mainPlayer);
 
-		
-}
-	
-	
-	
-
-	
 	setKeyboardHandler(myKeyboardHandler);
 	// Enter main loop - this handles update and render calls
 	engineMainLoop();
@@ -131,5 +143,3 @@ int main(void) {
 	// return success :)
 	return 0;
 }
-
-

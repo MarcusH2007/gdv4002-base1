@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject2D.h"
+#include <bitset>
 
 class Player : public GameObject2D {
 
@@ -12,6 +13,6 @@ public:
 
 	void update(double tDelta) override;
 
-
+	void updateKeys(std::bitset<5> newKeys);
 
 };

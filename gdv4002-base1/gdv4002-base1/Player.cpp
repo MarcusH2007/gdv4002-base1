@@ -9,25 +9,51 @@ Player::Player(glm::vec2 initPosition, float initOrientation, glm::vec2 initSize
 
 	playerSpeed = initialPlayerSpeed;
 
-	void Player::update(double tDelta) {
-		//unlike our myUpdate function, we're already 'in' the player object, so no need to call getObject as we did before
+	
+}
 
-		if (wPressed == true) {
-			position.y += playerSpeed*(float)tDelta
-		}
+void Player::update(double tDelta) {
+	//unlike our myUpdate function, we're already 'in' the player object, so no need to call getObject as we did before
 
-		if (aPressed == true) {
-			position.x -= playerSpeed * (float)tDelta
+	if (keys[0]) {
+		position.y += playerSpeed * (float)tDelta;
+		//orientation += playerSpeed * (float)tDelta;
+	}
 
-		}
+	if (keys[1]) {
+		position.x -= playerSpeed * (float)tDelta;
+		orientation += playerSpeed * (float)tDelta;
+	}
 
-		if (sPressed == true) {
-			position.y += playerSpeed * (float)tDelta
-		}
+	if (keys[3]) {
+		position.y -= playerSpeed * (float)tDelta;
+		//orientation -= playerSpeed * (float)tDelta;
+	}
 
-		if (dPressed == true) {
-			position. += playerSpeed * (float)tDelta
-		}
+	if (keys[4]) {
+		position.x += playerSpeed * (float)tDelta;
+		orientation -= playerSpeed * (float)tDelta;
+	}
+}
 
+void Player::updateKeys(std::bitset<5> newKeys) {
+
+	if (newKeys[0] != keys[0]) {
+		keys[0] = newKeys[0];
+	}
+
+	if (newKeys[1] != keys[1]) {
+		keys[1] = newKeys[1];
+	}
+
+	if (newKeys[2] != keys[2]) {
+		keys[2] = newKeys[2];
+	}
+
+	if (newKeys[3] != keys[3]) {
+		keys[3] = newKeys[3];
+	}
+	if (newKeys[4] != keys[4]) {
+		keys[4] = newKeys[4];
 	}
 }
