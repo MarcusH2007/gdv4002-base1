@@ -3,10 +3,14 @@
 #include <bitset>
 #include "Player.h"
 #include "Enemy.h"
+#include "Emitter.h"
 
 	
 
 // Function prototypes
+
+//global vars
+glm::vec2 gravity = glm::vec2(0.0f, -0.005f);
 
 bool wPressed;
 bool aPressed;
@@ -15,8 +19,13 @@ bool dPressed;
 
  
 std::bitset<5> keys;
+
+//glm::vec2 gravity = glm::vec2(0.0f, -1.0f);
 	
 Player* mainPlayer;
+
+
+
 
 	
 	
@@ -57,14 +66,14 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 			printf("s pressed\n");
 			sPressed = true;
 
-			keys[3] = 1;
+			keys[2] = 1;
 			break;
 
 		case GLFW_KEY_D:
 			printf("d pressed\n");
 			dPressed = true;
 
-			keys[4] = 1;
+			keys[3] = 1;
 			break;
 		}
 	}
@@ -93,14 +102,14 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 			printf("s released\n");
 			sPressed = false;
 
-			keys[3] = 0;
+			keys[2] = 0;
 			break;
 
 		case GLFW_KEY_D:
 			printf("d released\n");
 			dPressed = false;
 
-			keys[4] = 0;
+			keys[3] = 0;
 			break;
 
 		}
@@ -127,11 +136,35 @@ int main(void) {
 	// Setup game scene objects here
 	//
 
+
 	GLuint playerTexture =loadTexture("Resources\\Textures\\player1_ship.png");
 
 	mainPlayer =new Player(glm::vec2(-1.5f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), playerTexture, 1.0f);
 
 	addObject("player", mainPlayer);
+
+	//1. load enemy texture
+	GLuint enemyTexture = loadTexture("Resources\\Textures\\asteroid.png");
+
+	// 2. Create enemy objects
+	Enemy* enemy1 = new Enemy(glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), enemyTexture, 0.0f, glm::radians(45.0f));
+
+	Enemy* enemy2 = new Enemy(glm::vec2(1.0f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), enemyTexture, 0.0f, glm::radians(90.0f));
+
+	Enemy* enemy3 = new Enemy(glm::vec2(2.0f, 0.0f), 0.0f, glm::vec2(0.5f, 0.5f), enemyTexture, 0.0f, glm::radians(60.0f));
+
+	// Add enemy objects to the engine
+	addObject("enemy1", enemy1);
+	addObject("enemy2", enemy2);
+	addObject("enemy3", enemy3);
+
+	addObject(key.c_str(), s1);
+
+	Emitter* emitter = new Emitter(glm::vec2(0.0f, getViewplaneHeight() / 2.0f * 1.2f), glm::vec2(getViewplaneWidth() / 2.0f, 0.0f), 0.05f);
+	addObject("emitter", emitter);
+
+	
+
 
 	setKeyboardHandler(myKeyboardHandler);
 	// Enter main loop - this handles update and render calls

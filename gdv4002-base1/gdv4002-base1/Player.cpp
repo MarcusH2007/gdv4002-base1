@@ -1,13 +1,17 @@
 #include "Player.h"
 #include "Keys.h"
 #include "bitset"
+#include "Engine.h"
 
 extern std::bitset<5> keys;
+extern glm::vec2 gravity;
 
-Player::Player(glm::vec2 initPosition, float initOrientation, glm::vec2 initSize, GLuint initTextureID, float initialPlayerSpeed) :
+Player::Player(glm::vec2 initPosition, float initOrientation, glm::vec2 initSize, GLuint initTextureID, float mass) :
 	GameObject2D(initPosition, initOrientation, initSize, initTextureID) {
 
-	playerSpeed = initialPlayerSpeed;
+	this->mass = mass;
+
+	velocity = glm::vec2(0.0f, 0.0f); //default to 0 velocity
 
 	
 }
@@ -15,25 +19,50 @@ Player::Player(glm::vec2 initPosition, float initOrientation, glm::vec2 initSize
 void Player::update(double tDelta) {
 	//unlike our myUpdate function, we're already 'in' the player object, so no need to call getObject as we did before
 
+	glm::vec2 F = glm::vec2(0.0f, 0.0f);
+
+	const float thrust = 2.0f;
+
 	if (keys[0]) {
-		position.y += playerSpeed * (float)tDelta;
-		//orientation += playerSpeed * (float)tDelta;
+
+		F += glm::vec2(0.0f, thrust);
+
+	}
+	
+	if (keys[2]) {
+
+		F += glm::vec2(0.0f,- thrust);
 	}
 
 	if (keys[1]) {
-		position.x -= playerSpeed * (float)tDelta;
-		orientation += playerSpeed * (float)tDelta;
+
+		F += glm::vec2(-thrust, 0.0f);
 	}
 
 	if (keys[3]) {
-		position.y -= playerSpeed * (float)tDelta;
-		//orientation -= playerSpeed * (float)tDelta;
+
+		F += glm::vec2(thrust, 0.0f);
 	}
 
-	if (keys[4]) {
-		position.x += playerSpeed * (float)tDelta;
-		orientation -= playerSpeed * (float)tDelta;
+	//gravity to the player
+	F += gravity;
+
+	//add impulse forces
+	if (position.y < -getViewplaneHeight() / 2.0f) {
+
+		F += glm::vec2(0.0f, 20.0f);
 	}
+
+	//2. calculate acceleration. if f=ma, a=f/m
+	glm::vec2 a = F * (1.0f / mass);
+
+	//3. integrate to get new velocity
+	velocity = velocity + (a * (float)tDelta);
+
+	//4. integrate to get a new position
+	position = position + (velocity * (float)tDelta);
+
+
 }
 
 void Player::updateKeys(std::bitset<5> newKeys) {
