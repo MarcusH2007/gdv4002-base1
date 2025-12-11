@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Emitter.h"
+//#include "glPrint.h"
 
 	
 
@@ -24,15 +25,19 @@ std::bitset<5> keys;
 	
 Player* mainPlayer;
 
+GLuint myFontNormal = 0;
+GLuint myFontUnderline = 0;
 
+//void myRender(GLFWwindow* window);
 
+	
+	
+	
+	
+	
+void deleteSnowflakes(GLFWwindow* window, double tDelta) {
 
-	
-	
-	
-	
-	
-	
+}
 
 
 
@@ -123,14 +128,24 @@ void myKeyboardHandler(GLFWwindow* window, int key, int scancode, int action, in
 int main(void) {
 
 	// Initialise the engine (create window, setup OpenGL backend)
-	int initResult = engineInit("GDV4002 - Applied Maths for Games", 1024, 1024);
+	int initResult = engineInit("GDV4002 - Applied Maths for Games", 1024, 1024, 10.0f);
+	
+	//myFontNormal = glBuildFont(L"Consolas", 24);
+	//myFontUnderline = glBuildFont(L" Aptos", 24, GLFONT_STYLE::BOLD | GLFONT_STYLE::UNDERLINE);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_ALWAYS);
 
 	// If the engine initialisation failed report error and exit
 	if (initResult != 0) {
 
 		printf("Cannot setup game window!!!\n");
 		return initResult; // exit if setup failed
+
 	}
+	
+	
 
 	//
 	// Setup game scene objects here
@@ -158,16 +173,16 @@ int main(void) {
 	addObject("enemy2", enemy2);
 	addObject("enemy3", enemy3);
 
-	addObject(key.c_str(), s1);
-
 	Emitter* emitter = new Emitter(glm::vec2(0.0f, getViewplaneHeight() / 2.0f * 1.2f), glm::vec2(getViewplaneWidth() / 2.0f, 0.0f), 0.05f);
 	addObject("emitter", emitter);
 
-	
 
 
 	setKeyboardHandler(myKeyboardHandler);
+	setUpdateFunction(deleteSnowflakes, false);
+	//setRenderFunction(myRender);
 	// Enter main loop - this handles update and render calls
+	
 	engineMainLoop();
 
 	// When we quit (close window for example), clean up engine resources
@@ -176,3 +191,16 @@ int main(void) {
 	// return success :)
 	return 0;
 }
+
+//void myRender(GLFWwindow* window) {
+	//Render code goes here...
+
+	//glSetCurrentFont(myFontUnderline);
+
+	//glColor3f(1.0f, 1.0f, 1.0f);
+
+	//glRasterPos2f(0.0f, 0.0f);
+
+	//glPrint("Hello, World!");
+
+//}

@@ -72,7 +72,7 @@ int engineInit(const char* windowTitle, int initWidth, int initHeight, float ini
 		glfwTerminate();
 		return -1;
 	}
-
+	
 	glfwMakeContextCurrent(window);
 
 	windowTitleString = std::string(windowTitle);

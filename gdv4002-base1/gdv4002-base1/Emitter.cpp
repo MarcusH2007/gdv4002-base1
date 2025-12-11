@@ -11,7 +11,7 @@ Emitter::Emitter(glm::vec2 initPosition, glm::vec2 initSize, float emitTimeInter
 
 	for (int i = 0; i < 8; i++) {
 
-		string path = "Resources\\Texture\\Snow\\snowflake" + to_string(i + 1) + string(".png");
+		string path = "Resources\\Textures\\asteroid.png";
 		snowflakes[i] = loadTexture(path.c_str());
 
 		if (snowflakes[i] > 0)
@@ -19,18 +19,19 @@ Emitter::Emitter(glm::vec2 initPosition, glm::vec2 initSize, float emitTimeInter
 		else
 			cout << "failed to load texture " << path << endl;
 
+		//obtain a seed for the random number engine
+		random_device rd;
+
+		//standard mersenne_twister_engine seeded with rd() - mt19937 is a high-quality pseudo-random number generator
+		gen = mt19937(rd());
+
+		spriteDist = uniform_int_distribution<int>(0, 7);
+		normDist = uniform_real_distribution<float>(-1.0f, 1.0f);
+		massDist = uniform_real_distribution<float>(0.005f, 0.08f);
+		scaleDist = uniform_real_distribution<float>(0.1f, 0.5f);
 	}
 
-	//obtain a seed for the random number engine
-	random_device rd;
-
-	//standard mersenne_twister_engine seeded with rd() - mt19937 is a high-quality pseudo-random number generator
-	gen = mt19937(rd());
-
-	spriteDist = uniform_int_distribution<int>(0, 7);
-	normDist = uniform_real_distribution<float>(-1.0f, 1.0f);
-	massDist = uniform_real_distribution<float>(0.005f, 0.08f);
-	scaleDist = uniform_real_distribution<float>(0.1f, 0.5f);
+	
 
 
 }
@@ -64,8 +65,13 @@ void Emitter::update(double tDelta) {
 			key += to_string(particleNumber);
 		}
 		particleNumber++;
+
+		addObject(key.c_str(), s1);
+		
 	}
 
 	
- }
+	
+};
+
 
